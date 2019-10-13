@@ -10,6 +10,7 @@
 
 
 .copy-button {
+    cursor: pointer;
     width: 100px;
     height: 30px;
     position: absolute;
