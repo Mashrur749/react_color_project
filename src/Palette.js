@@ -39,12 +39,11 @@ export default class Palette extends Component {
           name = {color.name}
           paletteId={id}
           showLink={true}
-          showingAllColors={true}
         />
       ))
     return (
       <div className = "Palette">
-        <Navbar level={level} changeLevel={this.changeLevel} handleChange={this.changeFormat}/>
+        <Navbar level={level} changeLevel={this.changeLevel} handleChange={this.changeFormat}  showingAllColors={true}/>
         <div className="Palette-colors">
           {colorBoxes}
         </div>
