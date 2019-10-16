@@ -53,6 +53,7 @@ export default class Navbar extends Component {
                 <div className="logo">
                     <Link to='/'>reactcolorpicker</Link>
                 </div>
+                {this.props.showingAllColors &&
                 <div className="slider-container">
                     <span>Level: {level}</span>
                     <div className="slider">
@@ -64,12 +65,14 @@ export default class Navbar extends Component {
                         />
                     </div>
                 </div>
+                }
+
                 <div className="select-container">
-                        <Select onChange={this.handleFormatChange}  value={format}>
-                            <MenuItem value="hex">HEX - #ffffff</MenuItem>
-                            <MenuItem value="rgb">RGB - rgb(255, 255, 255)</MenuItem>
-                            <MenuItem value="rgba">RGBA - rgba(255, 255, 255, 1)</MenuItem>
-                        </Select>
+                    <Select onChange={this.handleFormatChange}  value={format}>
+                        <MenuItem value="hex">HEX - #ffffff</MenuItem>
+                        <MenuItem value="rgb">RGB - rgb(255, 255, 255)</MenuItem>
+                        <MenuItem value="rgba">RGBA - rgba(255, 255, 255, 1)</MenuItem>
+                    </Select>
                 </div>
                 <Snackbar 
                     onClose={this.closeSnackbar}
