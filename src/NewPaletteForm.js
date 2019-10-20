@@ -13,7 +13,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import {ChromePicker} from "react-color";
 import Button from '@material-ui/core/Button';
-import DraggableColorBox from "./DraggableColorBox"
+import DraggableColorBox from "./DraggableColorBox";
+import {ValidatorForm, TextValidator} from "react-material-ui-form-validator"
 
 const drawerWidth = 400;
 
@@ -88,15 +89,18 @@ const styles = theme => ({
 });
 
 class NewPaletteForm extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             open: true,
             currColor: "teal",
-            colors: ["purple", "#e15764"]
+            newName: "",
+            colors: []
         };
-    
+
     }
+
+    
 
     handleDrawerOpen = () => {
         this.setState({open: true});
@@ -107,16 +111,38 @@ class NewPaletteForm extends React.Component {
     };
 
     updateCurrColor = newColor => {
-        this.setState({
-            currColor: newColor.hex
-        })
+        this.setState({currColor: newColor.hex})
     }
 
     addNewColor = () => {
+        const newColor = {color: this.state.currColor, name: this.state.newName}
         this.setState({
-            colors: [...this.state.colors, this.state.currColor]
+            colors: [
+                ...this.state.colors,
+                newColor
+            ]
         })
     }
+
+    handleChange = e => {
+        this.setState({newName: e.target.value})
+    }
+
+    componentDidMount() {
+        // custom rule will have name 'isPasswordMatch'
+        ValidatorForm.addValidationRule('isColorNameUnique', (value) => 
+            this.state.colors.every(
+                ({name}) => name.toLowerCase() !== value.toLowerCase()
+            )
+        );
+        
+        ValidatorForm.addValidationRule('isColorUnique', (value) => 
+            this.state.colors.every(
+                ({color}) => color.toLowerCase() !== this.state.currColor.toLowerCase()
+            )
+        );
+    }
+
 
     render() {
         const {classes} = this.props;
@@ -169,23 +195,47 @@ class NewPaletteForm extends React.Component {
                     </div>
                     <div className={classes.drawerHeader}/>
                     <Divider/>
-                    <ChromePicker color={this.state.currColor} onChangeComplete={this.updateCurrColor}/>
-                    <Button 
-                        variant="contained" color="primary" 
-                        style={{backgroundColor: this.state.currColor}}
-                        onClick={this.addNewColor}>
-                        Add Color
-                    </Button>
+                    <ChromePicker
+                        color={this.state.currColor}
+                        onChangeComplete={this.updateCurrColor}/>
+                    <ValidatorForm onSubmit={this.addNewColor}>
+                        <TextValidator 
+                            value={this.state.newName} 
+                            onChange={this.handleChange}
+                            validators={[
+                                'required', 
+                                'isColorNameUnique',
+                                'isColorUnique'
+                            ]}
+                            errorMessages={[
+                                'this field is required', 
+                                'Color name is not unique',
+                                'Color already used'
+                            ]}
+                        />
+
+                        <Button
+                            variant="contained"
+                            type="submit"
+                            color="primary"
+                            style={{
+                                backgroundColor: this.state.currColor
+                            }}>
+                            Add Color
+                        </Button>
+                    </ValidatorForm >
+
                 </Drawer>
                 <main
                     className={classNames(classes.content, {
                     [classes.contentShift]: open
                 })}>
-                
+
                     <div className={classes.drawerHeader}></div>
-                    {this.state.colors.map(color => (
-                        <DraggableColorBox color={color}/>
-                    ))}
+                    {this
+                        .state
+                        .colors
+                        .map(color => (<DraggableColorBox color={color.color} name={color.name}/>))}
 
                 </main>
             </div>
