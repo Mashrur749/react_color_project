@@ -86,9 +86,15 @@ const styles = theme => ({
 });
 
 class NewPaletteForm extends React.Component {
-    state = {
-        open: false
-    };
+    constructor(props){
+        super(props);
+        this.state = {
+            open: true,
+            currColor: "teal",
+            colors: ["purple", "#e15764"]
+        };
+    
+    }
 
     handleDrawerOpen = () => {
         this.setState({open: true});
@@ -97,6 +103,18 @@ class NewPaletteForm extends React.Component {
     handleDrawerClose = () => {
         this.setState({open: false});
     };
+
+    updateCurrColor = newColor => {
+        this.setState({
+            currColor: newColor.hex
+        })
+    }
+
+    addNewColor = () => {
+        this.setState({
+            colors: [...this.state.colors, this.state.currColor]
+        })
+    }
 
     render() {
         const {classes} = this.props;
@@ -149,16 +167,27 @@ class NewPaletteForm extends React.Component {
                     </div>
                     <div className={classes.drawerHeader}/>
                     <Divider/>
-                    <ChromePicker color="purple" onChangeComplete={color => console.log(color)}/>
-                    
-                    <Button variant="contained" color="primary">
+                    <ChromePicker color={this.state.currColor} onChangeComplete={this.updateCurrColor}/>
+                    <Button 
+                        variant="contained" color="primary" 
+                        style={{backgroundColor: this.state.currColor}}
+                        onClick={this.addNewColor}>
                         Add Color
                     </Button>
                 </Drawer>
                 <main
                     className={classNames(classes.content, {
                     [classes.contentShift]: open
-                })}></main>
+                })}>
+                
+                    <div className={classes.drawerHeader}></div>
+                    <ul>
+                        {this.state.colors.map(color => (
+                            <li style={{backgroundColor: color}}>{color}</li>
+                        ))}
+                    </ul>
+
+                </main>
             </div>
         );
     }
