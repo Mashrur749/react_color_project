@@ -151,6 +151,12 @@ class NewPaletteForm extends React.Component {
             .push('/');
     }
 
+    removeColor = colorName => {
+        this.setState({
+            colors: this.state.colors.filter(color => color.name !== colorName)
+        })
+    }
+
     componentDidMount() {
         // custom rule will have name 'isPasswordMatch'
         ValidatorForm.addValidationRule('isColorNameUnique', (value) => this.state.colors.every(
@@ -262,10 +268,18 @@ class NewPaletteForm extends React.Component {
                 })}>
 
                     <div className={classes.drawerHeader}></div>
+                    
                     {this
                         .state
                         .colors
-                        .map(color => (<DraggableColorBox color={color.color} name={color.name}/>))}
+                        .map(color => (<DraggableColorBox 
+                                key={color.name}
+                                color={color.color} 
+                                name={color.name}
+                                handleClick={()=> {
+                                    this.removeColor(color.name)
+                                }}
+                            />))}
 
                 </main>
             </div>
