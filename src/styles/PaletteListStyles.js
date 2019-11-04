@@ -15,6 +15,7 @@ export default {
     display: "flex",
     alignItems: "flex-start",
     justifyContent: "center",
+    paddingBottom: "2rem",
     /* background by SVGBackgrounds.com */
     backgroundColor: "#394bad",
     backgroundImage: `url(${bg})`,
@@ -53,6 +54,7 @@ export default {
     gridTemplateColumns: "repeat(3, 30%)",
     gridGap: "2.5rem",
     [sizes.down("md")]: {
+      paddingBottom: "2rem",
       gridTemplateColumns: "repeat(2, 50%)"
     },
     [sizes.down("xs")]: {
